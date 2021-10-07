@@ -16,7 +16,7 @@ public class MainPlayer : MonoBehaviour
 			_PlayerCamera.OnGrab += HandleOnGrab;
 		}
 	}
-	void HandleOnGrab (PlayerCam sender)
+	public void HandleOnGrab (PlayerCam sender)
 	{
 		sender.GrabbedObj.transform.position = myHand.transform.position;
 		sender.GrabbedObj.transform.parent = myHand.transform;

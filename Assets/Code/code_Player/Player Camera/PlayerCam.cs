@@ -14,6 +14,7 @@ namespace com.amerike.rod
 		[HideInInspector]public GameObject GrabbedObj;
 		
 	    Mouse mouse;
+		Keyboard keyBoard;
 	    Camera myCamera;
 	    float rotationLimit = 0f;
 	    float rotationX = 0f;
@@ -33,6 +34,15 @@ namespace com.amerike.rod
 	    bool active;
 	    bool invertedYAxis;
 	    bool invertedXAxis;
+		[SerializeField] private BoolVariable InvertedYState;
+		[SerializeField] private BoolVariable InvertedXState;
+		bool hasprop;
+		GravityProps grabbedObj;
+		public bool HasProp
+		{
+			get{return hasprop;}
+			set{hasprop = value;}
+		}
 	    public bool Active 
 	    {
 	        get{return active;}
@@ -62,18 +72,21 @@ namespace com.amerike.rod
 	            
 	            if(mouse!=null && myCamera != null) CheckMouseInput();
 	        }
+			
 	    }
 	
 	    void Prepare()
 	    {
 	        #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_EDITOR || UNITY_STANDALONE_LINUX
 			    mouse = Mouse.current;
+				keyBoard = Keyboard.current;
 			#endif
 	        
 	        try{myCamera = Camera.main;}
 	        catch{myCamera = GetComponent<Camera>();}
 	
 			active = true;
+			
 	    }
 	
 	    void CheckMouseInput()
@@ -82,7 +95,14 @@ namespace com.amerike.rod
 	        rotationX = mouseMovement.x *speedCamera;
 	        rotationLimit += mouseMovement.y * speedCamera;
 	        rotationLimit = Mathf.Clamp(rotationLimit,-80  ,80f);
-	    
+			if(InvertedYState != null)
+			{
+				invertedYAxis = InvertedYState.Value;
+			}
+	    	if(InvertedXState != null)
+			{
+				InvertedXAxis = InvertedXState.Value;
+			}
 	        if (!invertedYAxis) 
 	            myCamera.transform.localRotation = Quaternion.Euler(rotationLimit*-1,0,0);
 	    
@@ -93,38 +113,50 @@ namespace com.amerike.rod
 	            player.Rotate(Vector3.up * rotationX);
 	        if(invertedXAxis)
 	            player.Rotate(Vector3.up * rotationX*-1);
-	
-	
-	        if(mouse.leftButton.wasPressedThisFrame)
-	        {
-	            GetViewInfo();
-	        }
+			
+			GetViewInfo();
 	    }
-	
-	    void GetViewInfo()
+	    public void GetViewInfo()
 	    {
 	        RaycastHit hit;
 	        Vector2 coordinate = new Vector2 (Screen.width/2,Screen.height/2);
 	        Ray myRay = myCamera.ScreenPointToRay(coordinate);
-	        if(Physics.Raycast (myRay, out hit, distanceHit))
+			if(mouse.leftButton.wasPressedThisFrame)
 	        {
-	            //print (hit.transform.name + "" + hit.point);
-	            IUsable usable = hit.transform.GetComponent<IUsable>();
-	            if(usable !=null)
-	            {
-	                usable.Use();
-	            }
-		        Grabbable grab = hit.transform.GetComponent<Grabbable>();
-		        if(grab != null)
-		        {
-		        	GrabbedObj = grab.gameObject;
-		        	if(OnGrab != null)//si alguien esta suscrito a este evento
+	            if(Physics.Raycast (myRay, out hit, distanceHit))
+	        	{
+	            	IUsable usable = hit.transform.GetComponent<IUsable>();
+	            	if(usable !=null)
+	            	{
+	                	usable.Use();
+	            	}
+		        	GravityProps gravityProps = hit.transform.GetComponent<GravityProps>();
+		        	if(gravityProps != null)
 		        	{
-		        		OnGrab(this);
+						gravityProps.GetProp();
+						grabbedObj = hit.transform.GetComponent<GravityProps>();
 		        	}
-		        }
-				print("Rayo conecto");
+	        	}
+				hasprop = true;
 	        }
+			if(mouse.rightButton.wasPressedThisFrame)
+			{
+				if(grabbedObj)
+				{
+					grabbedObj.DropProp();
+					hasprop = false;
+					grabbedObj = null;
+				}
+			}
+			if(keyBoard.eKey.wasPressedThisFrame)
+			{
+				if(grabbedObj)
+				{
+					grabbedObj.ThrowProp();
+					hasprop = false;
+					grabbedObj = null;
+				}
+			}
 	    }
 	}
 }

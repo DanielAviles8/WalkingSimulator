@@ -1,8 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Grabbable : MonoBehaviour
+public class Grabbable
 {
-    //hola;
-    //Ya funciona :D;
+   
 }
