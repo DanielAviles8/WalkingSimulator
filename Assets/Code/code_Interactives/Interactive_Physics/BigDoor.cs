@@ -14,7 +14,7 @@ public class BigDoor : MonoBehaviour
 
     private void Update()
     {
-        if(counter >= 1)
+        if(counter >= 3)
         {
             BigFDoor.SetActive(false);
         }

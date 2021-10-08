@@ -8,5 +8,6 @@ public class BoolVariable : ScriptableObject
     public void SetBoolValue(bool value)
     {
         Value = value;
+        SetDirty();
     }
 }

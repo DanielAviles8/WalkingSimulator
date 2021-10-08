@@ -34,6 +34,7 @@ namespace com.amerike.rod
 	    bool active;
 	    bool invertedYAxis;
 	    bool invertedXAxis;
+		[SerializeField] private FloatVariable MouseSensibility;
 		[SerializeField] private BoolVariable InvertedYState;
 		[SerializeField] private BoolVariable InvertedXState;
 		bool hasprop;
@@ -56,7 +57,7 @@ namespace com.amerike.rod
 	    public bool InvertedXAxis
 	    {
 	        get{return invertedXAxis;}
-	        set{invertedYAxis = value;}
+	        set{invertedXAxis = value;}
 	    }
 	
 	    void Start()
@@ -92,26 +93,26 @@ namespace com.amerike.rod
 	    void CheckMouseInput()
 	    {
 	        Vector2 mouseMovement = mouse.delta.ReadValue();
-	        rotationX = mouseMovement.x *speedCamera;
-	        rotationLimit += mouseMovement.y * speedCamera;
+	        rotationX = mouseMovement.x * MouseSensibility.Value;
+			rotationLimit += mouseMovement.y * MouseSensibility.Value;
 	        rotationLimit = Mathf.Clamp(rotationLimit,-80  ,80f);
 			if(InvertedYState != null)
 			{
-				invertedYAxis = InvertedYState.Value;
+				InvertedYAxis = InvertedYState.Value;
 			}
 	    	if(InvertedXState != null)
 			{
 				InvertedXAxis = InvertedXState.Value;
 			}
-	        if (!invertedYAxis) 
+	        if(!InvertedYAxis) 
 	            myCamera.transform.localRotation = Quaternion.Euler(rotationLimit*-1,0,0);
 	    
-	       if(invertedYAxis)
+	       if(InvertedYAxis)
 	            myCamera.transform.localRotation = Quaternion.Euler(rotationLimit*1,0,0);
 	        
-	        if(!invertedXAxis)
+	        if(!InvertedXAxis)
 	            player.Rotate(Vector3.up * rotationX);
-	        if(invertedXAxis)
+	        if(InvertedXAxis)
 	            player.Rotate(Vector3.up * rotationX*-1);
 			
 			GetViewInfo();
