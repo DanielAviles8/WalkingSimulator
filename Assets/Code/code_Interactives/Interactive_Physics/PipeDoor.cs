@@ -16,7 +16,6 @@ public class PipeDoor : MonoBehaviour
     {
 		Prepare();
     }
-
 	void Prepare()
 	{
 		#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_EDITOR || UNITY_STANDALONE_LINUX

@@ -1,26 +1,56 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public class Letter : MonoBehaviour, IUsable
+namespace com.amerike.rod
 {
-	public UnityEvent OnUse;
-	public bool CanInteract
+	public class Letter : MonoBehaviour, IUsable
 	{
-		get
+		public UnityEvent OnUse;
+		[SerializeField] private PlayerMovement Player;
+		[SerializeField] private PlayerCam Camera;
+		public GameObject Table;
+		public bool isReading;
+		public bool CanInteract
 		{
-			return canInteract;
+			get
+			{
+				return canInteract;
+			}
+			set
+			{
+				canInteract = value;
+			}
 		}
-		set
+		bool canInteract;
+        private void Start()
+        {
+			isReading = false;
+        }
+        public void Use()
 		{
-			canInteract = value;
+			if (OnUse != null)
+			{
+				OnUse.Invoke();
+			}
 		}
-	}
-	bool canInteract;
-	public void Use()
-	{
-		if(OnUse != null)
+		public void MakeStatic()
 		{
-			OnUse.Invoke();
+			Player.state = PlayerMovement.playerState.Static;
+			Camera.state = PlayerCam.cameraState.Static;
+			isReading = true;
 		}
-	}
+		public void MakeMovible()
+        {
+			Player.state = PlayerMovement.playerState.Moving;
+			Camera.state = PlayerCam.cameraState.Moving;
+        }
+        private void Update()
+        {
+            if(isReading == true)
+            {
+				Table.SetActive(false);
+            }
+        }
+    }
 }
+

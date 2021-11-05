@@ -4,7 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - ball
+  - Prop
+  - MetalCube
+  - Rock
+  - Ball
   layers:
   - Default
   - TransparentFX

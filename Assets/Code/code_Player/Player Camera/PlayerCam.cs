@@ -12,11 +12,16 @@ namespace com.amerike.rod
 		public event HandlerPlayerCam OnGrab;
 		
 		[HideInInspector]public GameObject GrabbedObj;
-		
+
+		public cameraState state;
+		public enum cameraState
+        {
+			Static, Moving,
+        }
 	    Mouse mouse;
 		Keyboard keyBoard;
 	    Camera myCamera;
-	    float rotationLimit = 0f;
+		float rotationLimit = 0f;
 	    float rotationX = 0f;
 	
 	    [Header("Player")]
@@ -63,15 +68,23 @@ namespace com.amerike.rod
 	    void Start()
 	    {
 	        Prepare();
-	    }
-	
-	    
+	    }    
 	    void Update()
 	    {
 	        if(active)
 	        {
-	            
-	            if(mouse!=null && myCamera != null) CheckMouseInput();
+	            if(mouse != null && myCamera != null)
+                {
+					if(state == cameraState.Moving)
+                    {
+						CheckMouseInput();
+						BlockMouse();
+					}
+					else if(state == cameraState.Static)
+                    {
+						UnblockedMouse();
+					}
+                }
 	        }
 			
 	    }
@@ -149,7 +162,7 @@ namespace com.amerike.rod
 					grabbedObj = null;
 				}
 			}
-			if(keyBoard.eKey.wasPressedThisFrame)
+			if(keyBoard.qKey.wasPressedThisFrame)
 			{
 				if(grabbedObj)
 				{
@@ -158,6 +171,32 @@ namespace com.amerike.rod
 					grabbedObj = null;
 				}
 			}
+			if(keyBoard.rKey.isPressed)
+			{
+				if(grabbedObj)
+				{
+					hasprop = true;
+					grabbedObj.MoveAwayProp();
+				}
+			}
+			if(keyBoard.eKey.isPressed)
+			{
+				if(grabbedObj)
+				{
+					hasprop = true;
+					grabbedObj.BringCloserProp();
+				}
+			}
 	    }
+		private void BlockMouse()
+        {
+			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.visible = false;
+        }
+		private void UnblockedMouse()
+        {
+			Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
+        }
 	}
 }

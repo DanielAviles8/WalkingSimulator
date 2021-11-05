@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
@@ -10,6 +8,11 @@ namespace com.amerike.rod
 	[RequireComponent(typeof(CharacterController))]
 	public class PlayerMovement : MonoBehaviour
 	{
+		public playerState state;
+		public enum playerState
+        {
+			Moving, Static,
+        }
 		public UnityEvent OnPrepare;
 	    public bool Active
 	    {
@@ -34,10 +37,15 @@ namespace com.amerike.rod
 		private Vector3 CamForward;
 	    private float verticalSpeed;
 	    public float movementSpeed = 1.0f;
-	    public float gravity = 9.8f;
-	    public float jumpHeight = 1.0f;
-	
-	    void Prepare()
+	    public float gravity = -30f;
+	    public float jumpHeight = 3.5f;
+
+		[SerializeField] LayerMask groundMask;
+		[SerializeField] private bool isGrounded;
+		Vector3 verticalVelocity = Vector3.zero;
+		public bool jump;
+
+		void Prepare()
 	    {
 	        #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_STANDALONE_LINUX || UNITY_EDITOR
 	        keyBoard = Keyboard.current;
@@ -54,6 +62,7 @@ namespace com.amerike.rod
 	    public void Start()
 	    {
 	        Prepare();
+			jump = false;
 	    }
 	    void Update()
 	    {
@@ -61,8 +70,16 @@ namespace com.amerike.rod
 	        {
 	            if(keyBoard != null)
 	            {
-	              CheckInputKeyBoard();
+	              if(state == playerState.Moving)
+                    {
+						CheckInputKeyBoard();
+                    }
+				  else if(state == playerState.Static)
+                    {
+
+                    }
 	            }
+				
 	        }
 	    }
 	    void CheckInputKeyBoard()
@@ -72,34 +89,46 @@ namespace com.amerike.rod
 	        CamRight = Camera.main.transform.right;
 	        CamForward.y = 0;
 	        CamRight.y = 0;
-	        if (keyBoard.wKey.isPressed)
-	        {
-		        movementDirection += CamForward;
-	        }
-	        if (keyBoard.sKey.isPressed)
-	        {
-	            movementDirection -= CamForward;
-	        }
-	        if (keyBoard.aKey.isPressed)
-	        {
-	            movementDirection -= CamRight;
-	        }
-	        if (keyBoard.dKey.isPressed)
-	        {
-	            movementDirection += CamRight;
-	        }
-	        if (characterController.isGrounded)
-	        {
-	            verticalSpeed = 0;
-	            if (keyBoard.spaceKey.isPressed)
-	            {
-	                verticalSpeed = jumpHeight;
-	            }
-	        }
-	            verticalSpeed -= gravity * Time.deltaTime;
-	            movementDirection.y = verticalSpeed;
-	            movementDirection.Normalize();
-	            Move(movementDirection);
+			if (keyBoard.anyKey.isPressed)
+			{
+				if (keyBoard.wKey.isPressed)
+				{
+					movementDirection += CamForward;
+				}
+				if (keyBoard.sKey.isPressed)
+				{
+					movementDirection -= CamForward;
+				}
+				if (keyBoard.aKey.isPressed)
+				{
+					movementDirection -= CamRight;
+				}
+				if (keyBoard.dKey.isPressed)
+				{
+					movementDirection += CamRight;
+				}
+                if (jump)
+                {
+					if (isGrounded)
+					{
+						movementDirection.y = Mathf.Sqrt(-2f * jumpHeight * gravity);
+					}
+					jump = false;
+				}
+                if (keyBoard.spaceKey.isPressed)
+                {
+					jump = true;
+                }
+			}
+			if (isGrounded)
+			{
+				movementDirection.y = 0;
+			}
+			movementDirection.y -= gravity * Time.deltaTime;
+			isGrounded = Physics.CheckSphere(transform.position, 0.1f, groundMask);
+			movementDirection.y = verticalSpeed;
+	        movementDirection.Normalize();
+	        Move(movementDirection);
 	    }
 	    void Move(Vector3 direction)
 	    {

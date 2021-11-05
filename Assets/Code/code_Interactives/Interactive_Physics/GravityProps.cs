@@ -5,8 +5,9 @@ using com.amerike.rod;
 public class GravityProps : MonoBehaviour
 {
 	public UnityEvent OnUse;
-	public GameObject Hand;
+	public GameObject Hand; 
 	public float speed;
+	public GameObject Player;
 	public bool CanInteract
 	{
 		get
@@ -28,6 +29,8 @@ public class GravityProps : MonoBehaviour
 		GetProp();
 		DropProp();
 		ThrowProp();
+		MoveAwayProp();
+		BringCloserProp();
 	}
 	public void GetProp()
 	{
@@ -35,14 +38,17 @@ public class GravityProps : MonoBehaviour
 		GetComponent<Rigidbody>().isKinematic = true;
 		gameObject.transform.position = Hand.transform.position;
 		gameObject.transform.parent = Hand.transform;
-		print("agarre prop :D");
 	}
 	public void DropProp()
 	{
 		GetComponent<Rigidbody>().useGravity = true;
 		GetComponent<Rigidbody>().isKinematic = false;
 		gameObject.transform.parent = null;
-		print("solte prop D:");
+        if (gameObject.CompareTag("MetalCube"))
+        {
+			GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
+			gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
 	}
 	public void ThrowProp()
 	{
@@ -50,6 +56,23 @@ public class GravityProps : MonoBehaviour
 		GetComponent<Rigidbody>().useGravity = true;
 		GetComponent<Rigidbody>().isKinematic = false;
 		gameObject.transform.parent = null;
-		print("avente prop");
+	}
+	public void MoveAwayProp()
+	{
+		float distance = Vector3.Distance(Hand.transform.position, Player.transform.position);
+		Mathf.Round(distance);
+		if(distance <= 10 && distance >= 1.5f)
+		{
+			Hand.transform.Translate(0, 0, .1f);
+		}
+	}
+	public void BringCloserProp()
+	{
+		float distance = Vector3.Distance(Hand.transform.position, Player.transform.position);
+		Mathf.Round(distance);
+		if(distance <= 10.5f && distance >= 2)
+        {
+			Hand.transform.Translate(0, 0, -.1f);
+		}
 	}
 }

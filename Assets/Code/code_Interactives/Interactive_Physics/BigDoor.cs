@@ -1,22 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BigDoor : MonoBehaviour
 {
     public GameObject BigFDoor;
-    public static float counter;
-    public static float Counter
+    public GameObject FirstSwitch;
+    public GameObject SecondSwitch;
+    public GameObject ThirdSwitch;
+    public static bool isActive;
+    public static bool IsActive
     {
-        get{return counter;}
-        set{counter = value;}
+        get { return isActive; }
+        set { isActive = value; }
     }
-
+    private void Start()
+    {
+        isActive = true;
+    }
     private void Update()
     {
-        if(counter >= 3)
+        if(CheckCubePos.isCubePos == true && CheckRockPos.isRockPos == true && CheckBallPos.isBallPos == true)
         {
+            print("abierto");
             BigFDoor.SetActive(false);
+            FirstSwitch.SetActive(false);
+            SecondSwitch.SetActive(false);
+            ThirdSwitch.SetActive(false);
+            isActive = false;
+        }
+        else
+        {
+            isActive = true;
         }
     }
 }

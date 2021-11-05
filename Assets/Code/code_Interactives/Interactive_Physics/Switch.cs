@@ -7,7 +7,7 @@ public class Switch : MonoBehaviour
     public GameObject Door;
     void OnCollisionEnter(Collision other)
     {
-        if(other.gameObject.CompareTag("ball"))
+        if(other.gameObject.CompareTag("Rock") || other.gameObject.CompareTag("Ball"))
         {
             Door.SetActive(false);
         }
