@@ -31,7 +31,6 @@ namespace com.amerike.rod
 	    CharacterController characterController;
 	
 	    private bool active;
-	    private Vector3 movementDirection;
 	    private Vector3 velocity;
 	    private Vector3 CamRight;
 		private Vector3 CamForward;
@@ -41,8 +40,7 @@ namespace com.amerike.rod
 	    public float jumpHeight = 3.5f;
 
 		[SerializeField] LayerMask groundMask;
-		[SerializeField] private bool isGrounded;
-		Vector3 verticalVelocity = Vector3.zero;
+		Vector3 movementDirection;
 		public bool jump;
 
 		void Prepare()
@@ -81,7 +79,7 @@ namespace com.amerike.rod
 	            }
 				
 	        }
-	    }
+		}
 	    void CheckInputKeyBoard()
 	    {
 	        movementDirection = Vector3.zero;
@@ -107,26 +105,7 @@ namespace com.amerike.rod
 				{
 					movementDirection += CamRight;
 				}
-                if (jump)
-                {
-					if (isGrounded)
-					{
-						movementDirection.y = Mathf.Sqrt(-2f * jumpHeight * gravity);
-					}
-					jump = false;
-				}
-                if (keyBoard.spaceKey.isPressed)
-                {
-					jump = true;
-                }
 			}
-			if (isGrounded)
-			{
-				movementDirection.y = 0;
-			}
-			movementDirection.y -= gravity * Time.deltaTime;
-			isGrounded = Physics.CheckSphere(transform.position, 0.1f, groundMask);
-			movementDirection.y = verticalSpeed;
 	        movementDirection.Normalize();
 	        Move(movementDirection);
 	    }

@@ -8,11 +8,12 @@ TagManager:
   - MetalCube
   - Rock
   - Ball
+  - Ground
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
   - 
