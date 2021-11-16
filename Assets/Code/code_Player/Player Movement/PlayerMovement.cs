@@ -25,23 +25,20 @@ namespace com.amerike.rod
 	            active = value;
 	        }
 	    }
-	
-	    Keyboard keyBoard;
-	    Gamepad gamePad;
-	    CharacterController characterController;
-	
-	    private bool active;
-	    private Vector3 velocity;
-	    private Vector3 CamRight;
-		private Vector3 CamForward;
-	    private float verticalSpeed;
-	    public float movementSpeed = 1.0f;
-	    public float gravity = -30f;
-	    public float jumpHeight = 3.5f;
 
-		[SerializeField] LayerMask groundMask;
-		Vector3 movementDirection;
-		public bool jump;
+		Keyboard keyBoard;
+		Gamepad gamePad;
+		CharacterController characterController;
+
+		private bool active;
+		private Vector3 movementDirection;
+		private Vector3 velocity;
+		private Vector3 CamRight;
+		private Vector3 CamForward;
+		private float verticalSpeed;
+		public float movementSpeed = 1.0f;
+		private float gravity = 5f;
+		private float jumpHeight = 1.0f;
 
 		void Prepare()
 	    {
@@ -60,7 +57,6 @@ namespace com.amerike.rod
 	    public void Start()
 	    {
 	        Prepare();
-			jump = false;
 	    }
 	    void Update()
 	    {
@@ -68,11 +64,11 @@ namespace com.amerike.rod
 	        {
 	            if(keyBoard != null)
 	            {
-	              if(state == playerState.Moving)
+					if(state == playerState.Moving)
                     {
 						CheckInputKeyBoard();
                     }
-				  else if(state == playerState.Static)
+					else if(state == playerState.Static)
                     {
 
                     }
@@ -82,11 +78,11 @@ namespace com.amerike.rod
 		}
 	    void CheckInputKeyBoard()
 	    {
-	        movementDirection = Vector3.zero;
-	        CamForward = Camera.main.transform.forward;
-	        CamRight = Camera.main.transform.right;
-	        CamForward.y = 0;
-	        CamRight.y = 0;
+			movementDirection = Vector3.zero;
+			CamForward = Camera.main.transform.forward;
+			CamRight = Camera.main.transform.right;
+			CamForward.y = 0;
+			CamRight.y = 0;
 			if (keyBoard.anyKey.isPressed)
 			{
 				if (keyBoard.wKey.isPressed)
@@ -105,10 +101,20 @@ namespace com.amerike.rod
 				{
 					movementDirection += CamRight;
 				}
+				if (characterController.isGrounded)
+				{
+					verticalSpeed = 0;
+					if (keyBoard.spaceKey.isPressed)
+					{
+						verticalSpeed = jumpHeight;
+					}
+				}
 			}
-	        movementDirection.Normalize();
-	        Move(movementDirection);
-	    }
+			verticalSpeed -= gravity * Time.deltaTime;
+			movementDirection.y = verticalSpeed;
+			movementDirection.Normalize();
+			Move(movementDirection);
+		}
 	    void Move(Vector3 direction)
 	    {
 	        characterController.Move((direction * 0.1f) * movementSpeed);

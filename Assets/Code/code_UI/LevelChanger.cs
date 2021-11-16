@@ -6,15 +6,16 @@ public class LevelChanger : MonoBehaviour
     public Animator animator;
     private int levelToLoad;
     public GameObject Player;
+    public int levelindex;
     // Update is called once per frame
     void Update()
     {
         if(Player.transform.position.y <= -10)
         {
-            FadeOut(4);
+            FadeOut();
         }
     }
-    void FadeOut(int levelindex)
+    void FadeOut()
     {
         levelToLoad = levelindex;
         animator.SetTrigger("FadeOut");

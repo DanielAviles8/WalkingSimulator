@@ -21,24 +21,26 @@ public class BallTargets : MonoBehaviour
         get { return check; }
         set { check = value; }
     }
+   
     private void Start()
     {
         check = false;
     }
+
     // Update is called once per frame
     void Update()
     {
-        
+
         if (check == true)
         {
             StartCoroutine(Counter());
-            
         }
-        if(check == false)
+        if (check == false)
         {
             StopCoroutine(Counter());
             Song.Stop();
         }
+        print(otherTargets);
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -58,9 +60,11 @@ public class BallTargets : MonoBehaviour
     }
     public void StartCounting()
     {
-        if(check == true && otherTargets >= 3)
+        if(check == true && BallSingleTargets.targetOne == true && BallSingleTargets2.targetTwo == true && BallSingleTargets3.targetThree == true)
         {
             ExitDoor.SetActive(false);
+            Song.Stop();
+            //Lo siento profe, real intente hacerlo elegante pero soy debil :c
         }
     }
 }

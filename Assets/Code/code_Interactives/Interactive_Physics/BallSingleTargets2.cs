@@ -1,19 +1,19 @@
 using UnityEngine;
 
-public class BallSingleTargets : MonoBehaviour
+public class BallSingleTargets2 : MonoBehaviour
 {
     public Material CheckMark;
     public Material Target;
-    public static bool targetOne;
-    public static bool TargetOne
+    public static bool targetTwo;
+    public static bool TargetTwo
     {
-        get { return targetOne; }
-        set { targetOne = value; }
+        get { return targetTwo; }
+        set { targetTwo = value; }
     }
     // Start is called before the first frame update
     void Start()
     {
-        targetOne = false;
+        targetTwo = false;
     }
     // Update is called once per frame
     void Update()
@@ -22,12 +22,12 @@ public class BallSingleTargets : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if(BallTargets.check == true)
+        if (BallTargets.check == true)
         {
             if (collision.gameObject.CompareTag("Ball"))
             {
                 this.GetComponent<MeshRenderer>().material = CheckMark;
-                targetOne = true;
+                targetTwo = true;
             }
         }
     }

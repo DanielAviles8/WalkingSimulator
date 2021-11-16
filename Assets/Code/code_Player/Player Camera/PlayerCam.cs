@@ -30,6 +30,9 @@ namespace com.amerike.rod
 	    [Header("Camera")]
 	    [Range(0f,1f)]
 	    [SerializeField] private float speedCamera = 1;
+
+		[Header("Second Camera")]
+		[SerializeField] private GameObject SecondCamera;
 	
 	    [Header("Rycast")]
 	    
@@ -68,6 +71,7 @@ namespace com.amerike.rod
 	    void Start()
 	    {
 	        Prepare();
+			hasprop = false;
 	    }    
 	    void Update()
 	    {
@@ -86,7 +90,7 @@ namespace com.amerike.rod
 					}
                 }
 	        }
-			
+			ActiveSecondCamera();
 	    }
 	
 	    void Prepare()
@@ -197,6 +201,17 @@ namespace com.amerike.rod
         {
 			Cursor.lockState = CursorLockMode.None;
 			Cursor.visible = true;
+        }
+		private void ActiveSecondCamera()
+        {
+			if(hasprop == false)
+            {
+				SecondCamera.SetActive(false);
+            }
+            else
+            {
+				SecondCamera.SetActive(true);
+            }
         }
 	}
 }

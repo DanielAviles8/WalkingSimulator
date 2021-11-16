@@ -12,12 +12,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Options.unity
     guid: 619ea432c7781bf4698df7853b2c00d9
   - enabled: 1
-    path: Assets/Scenes/Credits.unity
-    guid: 420b9b195cdedd3489671e6122d9ccac
-  - enabled: 1
     path: Assets/Scenes/GrayBox.unity
     guid: f3d9a01ba79bba64890fa74d07cf5815
   - enabled: 1
     path: Assets/Scenes/Level 2.unity
     guid: 8cfb0748d86fa524f9e8517584251d25
+  - enabled: 1
+    path: Assets/Scenes/Credits.unity
+    guid: 420b9b195cdedd3489671e6122d9ccac
   m_configObjects: {}
